@@ -209,4 +209,5 @@ def about(request):
 
 @login_required
 def restricted(request):
-    return HttpResponse("Since you're logged in,you can see this page")
+    return render(request, 'rango/restricted.html', {})
+    #return HttpResponse("Since you're logged in,you can see this page")
