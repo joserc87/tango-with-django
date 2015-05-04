@@ -1,24 +1,30 @@
 {% extends 'base.html' %}
 
-{% block title %}Add page to category {{ category.name }}{% endblock %}
+{% block title %}Add page{% endblock %}
 
 {% block body_block %}
-    <h1>Add a Page</h1>
+    {% if category %}
+    <div class="page-header">
+        <h2>Add a Page to <a href="{% url 'category' category.slug %}">{{ category.name }}</a></h2>
+    </div>
+    <div>
+        <form role="form" id="page_form" method="post" action="{% url 'add_page' category.slug %}">
 
-    <form id="page_form" method="post" action="{% url 'add_page' category.slug %}">
+            {% csrf_token %}
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
 
-        {% csrf_token %}
-        {% for hidden in form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
-
-        {% for field in form.visible_fields %}
-            {{ field.errors }}
-            {{ field.help_text }}
-            {{ field }}
+            {% for field in form.visible_fields %}
+                {{ field.errors }}
+                {{ field.help_text }} <br/>
+                {{ field }} <br/>
+            {% endfor %}
             <br/>
-        {% endfor %}
-
-        <input type="submit" name="submit" value="Add page to the category" />
-    </form>
+            <button class="btn btn-primary" type="submit" name="submit" >Add Page</button>
+        </form>
+    </div>
+    {% else %}
+        <p>This category does not exist.</p>
+    {% endif %}
 {% endblock %}
