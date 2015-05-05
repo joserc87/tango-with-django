@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from rango.models import Category, Page
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
+from rango.bing_search import run_query
 
 def index(request):
     # Query the database for a list of ALL categories currently stored.
@@ -135,3 +136,12 @@ def about(request):
 @login_required
 def restricted(request):
     return render(request, 'rango/restricted.html', {})
+
+def search(request):
+    result_list = []
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+        if query:
+            # RUn our Bing function to get the results in list!
+            result_list = run_query(query)
+    return render(request, 'rango/search.html', {'result_list': result_list})
